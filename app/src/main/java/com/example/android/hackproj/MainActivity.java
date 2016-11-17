@@ -28,8 +28,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int UPDATE_THRESHOLD = 0;
     private static final int SAFETY_THRESHOLD = 4;
 
-    public ArrayList<Double> times = new ArrayList<>();
-
+    public Queue<Double> speedq = new LinkedList<>();
+    public Queue<Long> timeq = new LinkedList<>();
+    public double[] speedlog = new double[10];
+    public long[] timelog = new long[10];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(MainActivity.this, AccelerationLog.class);
+                intent.putExtra("speedLog", speedlog);
+                //intent.putExtra("timeLog", timelog);
                 startActivity(intent);
                 return true;
 
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }else{
             speedDisplay.setText("Driving Unsafely!");
         }
-        //SEND ACCELERATION LOG SOME DATA NOW
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
         accelerometer.setText("Accelerating at: "+df.format(speed)+" m/s^2"+" x: "+df.format(x)+" y: "+df.format(y)+" z: "+df.format(z));
@@ -97,6 +100,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if ((curTime - lastUpdate) > 100) {
                 lastUpdate = curTime;
                 unsafeDriving(speed, x, y, z);
+                //compile data for acceleration log
+                speedq.add(speed);
+                if(speedq.size()>10){
+                    speedq.remove();
+                }
+                int i = 0;
+                for(double a: speedq){
+                    speedlog[i]=a;
+                    i++;
+                }
+                timeq.add(curTime);
+                if(timeq.size()>10){
+                    timeq.remove();
+                }
+                int j = 0;
+                for(double a: speedq){
+                    speedlog[j]=a;
+                    j++;
+                }
             }
         }
     }

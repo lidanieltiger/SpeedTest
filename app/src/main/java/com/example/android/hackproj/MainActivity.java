@@ -2,9 +2,11 @@ package com.example.android.hackproj;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.SensorEventListener;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
+    private static final String MY_PREFERENCES = "my_preferences";
+
     private long lastUpdate = 0;
     private static final int UPDATE_THRESHOLD = 0;
     private static final int SAFETY_THRESHOLD = 4;
@@ -38,6 +42,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+
+        TextView isFirst = (TextView)findViewById(R.id.first_launch);
+        boolean isFirstTime = MainActivity.isFirst(MainActivity.this);
+        if(!isFirstTime){
+            isFirst.setText("not first"); //TODO: SET CALIBRATION
+        }
+    }
+    public static boolean isFirst(Context context){ //checks if this is the first time I've opened the app
+        final SharedPreferences reader = context.getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        final boolean first = reader.getBoolean("is_first", true);
+        if(first){
+            final SharedPreferences.Editor editor = reader.edit();
+            editor.putBoolean("is_first", false);
+            editor.commit();
+        }
+        return first;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){ //stuff for the menu
@@ -94,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             double speed = Math.sqrt(Math.pow(x, 2)+Math.pow(y,2)+Math.pow((z),2));
             //calculate whether or not to update the number now
             long curTime = System.currentTimeMillis();
-            if ((curTime - lastUpdate) > 100) {
+            if ((curTime - lastUpdate) > 100) { //TODO: calculate the average speed in a window
                 lastUpdate = curTime;
                 unsafeDriving(speed, x, y, z);
                 //compile data for acceleration log

@@ -21,11 +21,12 @@
         android:id="@+id/isReckless"
         android:layout_gravity="center_horizontal" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/switchActivity"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="first launch"
+        android:id="@+id/first_launch"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

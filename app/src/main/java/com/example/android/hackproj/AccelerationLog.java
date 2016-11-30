@@ -17,7 +17,7 @@ public class AccelerationLog extends AppCompatActivity {
         mLayout = (RelativeLayout) findViewById(R.id.logLayout);
         listview = (ListView) findViewById(R.id.speedList);
         ArrayList<Double> listDouble = (ArrayList<Double>) getIntent().getSerializableExtra("arraylist");
-        ArrayAdapter<Double> arrayAdapter = new ArrayAdapter<Double>(
+        ArrayAdapter<Double> arrayAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 listDouble );

@@ -3,6 +3,8 @@ package com.example.android.hackproj;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorEventListener;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -19,24 +21,20 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
     private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
     private static final int UPDATE_THRESHOLD = 0;
     private static final int SAFETY_THRESHOLD = 4;
 
-    public Queue<Double> speedq = new LinkedList<>();
-    public Queue<Long> timeq = new LinkedList<>();
-    public double[] speedlog = new double[10];
-    public long[] timelog = new long[10];
+    public ArrayList<Double> speedlog = new ArrayList<>();
+    public ArrayList<Double> timelog = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
@@ -54,11 +52,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(MainActivity.this, AccelerationLog.class);
-                intent.putExtra("speedLog", speedlog);
-                //intent.putExtra("timeLog", timelog);
+                intent.putExtra("arraylist", speedlog);
                 startActivity(intent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -79,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             speedDisplay.setText("OK");
         }else{
             speedDisplay.setText("Driving Unsafely!");
+            speedlog.add(speed);
         }
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
@@ -101,24 +98,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 lastUpdate = curTime;
                 unsafeDriving(speed, x, y, z);
                 //compile data for acceleration log
-                speedq.add(speed);
-                if(speedq.size()>10){
-                    speedq.remove();
-                }
-                int i = 0;
-                for(double a: speedq){
-                    speedlog[i]=a;
-                    i++;
-                }
-                timeq.add(curTime);
-                if(timeq.size()>10){
-                    timeq.remove();
-                }
-                int j = 0;
-                for(double a: speedq){
-                    speedlog[j]=a;
-                    j++;
-                }
             }
         }
     }

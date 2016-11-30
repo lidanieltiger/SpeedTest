@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int SAFETY_THRESHOLD = 4;
 
     public ArrayList<Double> speedlog = new ArrayList<>();
-    public ArrayList<Double> timelog = new ArrayList<>();
+    public ArrayList<Double> speedwindow = new ArrayList<>();
+
+    long prevFailure=0;
+    boolean collecting = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,15 +91,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
-    private void unsafeDriving(double speed, double x, double y, double z){
-        TextView speedDisplay = (TextView)findViewById(R.id.isReckless);
+    private void updateSpeed(double speed, double x, double y, double z){
         TextView accelerometer = (TextView)findViewById(R.id.AccelDisplay);
-        if(speed<SAFETY_THRESHOLD){
-            speedDisplay.setText("OK");
-        }else{
-            speedDisplay.setText("Driving Unsafely!");
-            speedlog.add(speed);
-        }
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
         accelerometer.setText("Accelerating at: "+df.format(speed)+" m/s^2"+" x: "+df.format(x)+" y: "+df.format(y)+" z: "+df.format(z));
@@ -104,9 +100,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
-
+        TextView warning = (TextView)findViewById(R.id.isReckless);
         if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
@@ -116,7 +111,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             long curTime = System.currentTimeMillis();
             if ((curTime - lastUpdate) > 100) { //TODO: calculate the average speed in a window
                 lastUpdate = curTime;
-                unsafeDriving(speed, x, y, z);
+                if(speed>SAFETY_THRESHOLD){ //speeding
+                    if(!collecting){ //wasn't previously speeding
+                        prevFailure=lastUpdate;
+                    }
+                    //set the text to say that fast acceleration reported
+                    warning.setText("fast acceleration...");
+                    collecting = true;
+                }else{ //not speeding, so not collecting data, check if there's enough data in speedwindow
+                    collecting = false;
+                    if(speedwindow.size()>5){
+                        //add the speed to speedlog
+                        double totalspeed=0;
+                        for(double a: speedwindow){
+                            totalspeed+=a;
+                        }
+                        totalspeed/=speedwindow.size();
+                        speedlog.add(totalspeed);
+                        //set the text to say that you were speeding
+                        warning.setText("you were speeding for consecutive seconds!");
+                    }
+                    //clear speedwindow, since we stopped accelerating so there's a break...
+                    speedwindow.clear();
+                }
+                if(collecting){
+                    if(lastUpdate-prevFailure<200){//consecutive data collection, so add member
+                        speedwindow.add(speed);
+                        prevFailure=lastUpdate;
+                    }else{//you've just started speeding so clear array and start over repopulating it
+                        speedwindow.clear();
+                        speedwindow.add(speed);
+                        prevFailure=lastUpdate;
+                    }
+                }
+                updateSpeed(speed, x, y, z);
                 //compile data for acceleration log
             }
         }

@@ -3,10 +3,18 @@ package com.example.android.hackproj;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.SensorEventListener;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -22,19 +30,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
-    private static final String MY_PREFERENCES = "my_preferences";
+    //LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+    //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    //double longitude = location.getLongitude();
+    //double latitude = location.getLatitude();
+
+    private static final String MY_PREFERENCES = "my_preferences"; //used to check if it's the first time opening the app
 
     private long lastUpdate = 0;
     private static final int UPDATE_THRESHOLD = 0;
     private static final int SAFETY_THRESHOLD = 4;
 
-    public ArrayList<Double> speedlog = new ArrayList<>();
-    public ArrayList<Double> speedwindow = new ArrayList<>();
+    public ArrayList<Double> speedlog = new ArrayList<>(); //contains a list of the average accelerations
+    public ArrayList<Double> speedwindow = new ArrayList<>(); //temporary list of acceleration
 
     long prevFailure=0;
     boolean collecting = false;
@@ -101,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
         TextView warning = (TextView)findViewById(R.id.isReckless);
+
         if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
@@ -128,6 +143,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         }
                         totalspeed/=speedwindow.size();
                         speedlog.add(totalspeed);
+                        /*if ( Build.VERSION.SDK_INT >= 23 &&
+                                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        {
+                            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                        }*/
                         //set the text to say that you were speeding
                         warning.setText("you were speeding for consecutive seconds!");
                     }
@@ -153,4 +174,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    /*private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };*/
+
 }

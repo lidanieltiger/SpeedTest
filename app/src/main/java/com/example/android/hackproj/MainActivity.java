@@ -42,7 +42,7 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient mGoogleApiClient; //SHA1 key F7:5E:1C:69:78:A8:73:0E:BD:68:4D:57:87:2D:16:E1:DE:B5:98:D4
     int REQUEST_LOCATION =0; //I have no idea what this does..
     double latitude = 0;
     double longitude = 0;
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //calculate whether or not to update the number now
             long curTime = System.currentTimeMillis();
             if ((curTime - lastUpdate) > 100) { //TODO: calculate the average speed in a window
+                //TODO: also find the speed in the first part of the window, and in the last part of the window
                 lastUpdate = curTime;
                 if(speed>SAFETY_THRESHOLD){ //speeding
                     if(!collecting){ //wasn't previously speeding

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.hardware.SensorEventListener;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Parcel;
@@ -32,14 +31,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-
-    //LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-    //Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    //double longitude = location.getLongitude();
-    //double latitude = location.getLatitude();
+    GoogleApiClient mGoogleApiClient;
+    int REQUEST_LOCATION =0; //I have no idea what this does..
+    double latitude = 0;
+    double longitude = 0;
 
     private static final String MY_PREFERENCES = "my_preferences"; //used to check if it's the first time opening the app
 
@@ -56,6 +62,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    //.addConnectionCallbacks(this)
+                    //.addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
@@ -66,6 +79,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             isFirst.setText("not first"); //TODO: SET CALIBRATION
         }
     }
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
     public static boolean isFirst(Context context){ //checks if this is the first time I've opened the app
         final SharedPreferences reader = context.getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
         final boolean first = reader.getBoolean("is_first", true);
@@ -143,14 +165,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         }
                         totalspeed/=speedwindow.size();
                         speedlog.add(totalspeed);
-                        /*if ( Build.VERSION.SDK_INT >= 23 &&
-                                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                        {
-                            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-                        }*/
+                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            // Check Permissions Now
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                    REQUEST_LOCATION);
+                        } else {
+                            // permission has been granted, continue as usual
+                            Location myLocation =
+                                    LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                            latitude = myLocation.getLatitude();
+                            longitude = myLocation.getLongitude();
+                        }
                         //set the text to say that you were speeding
-                        warning.setText("you were speeding for consecutive seconds!");
+                        warning.setText("you were speeding for consecutive seconds!"+latitude+" "+longitude);
                     }
                     //clear speedwindow, since we stopped accelerating so there's a break...
                     speedwindow.clear();
@@ -174,26 +203,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-    /*private final LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };*/
-
 }

@@ -148,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             double speed = Math.sqrt(Math.pow(x, 2)+Math.pow(y,2)+Math.pow((z),2));
             //calculate whether or not to update the number now
             long curTime = System.currentTimeMillis();
-            if ((curTime - lastUpdate) > 100) { //TODO: calculate the average speed in a window
+            if ((curTime - lastUpdate) > 100) {
+                //TODO: calculate the average speed in a window
                 //TODO: also find the speed in the first part of the window, and in the last part of the window
                 lastUpdate = curTime;
                 if(speed>SAFETY_THRESHOLD){ //speeding
@@ -160,8 +161,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     collecting = true;
                 }else{ //not speeding, so not collecting data, check if there's enough data in speedwindow
                     collecting = false;
-                    if(speedwindow.size()>5){
-                        //add the speed to speedlog
+                    if(speedwindow.size()>=5){ //500 milliseconds or more
                         double totalspeed=0;
                         for(double a: speedwindow){
                             totalspeed+=a;
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         }
                         locations.add(new Double[]{latitude, longitude, totalspeed});
                         //set the text to say that you were speeding
-                        warning.setText("you were speeding for consecutive seconds!"+latitude+" "+longitude);
+                        warning.setText("you were speeding for "+speedwindow.size()*100+" consecutive milliseconds!");
                     }
                     //clear speedwindow, since we stopped accelerating so there's a break...
                     speedwindow.clear();

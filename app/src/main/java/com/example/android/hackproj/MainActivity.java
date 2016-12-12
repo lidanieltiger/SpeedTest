@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private long lastUpdate = 0;
     private static final int UPDATE_THRESHOLD = 0;
-    private static final int SAFETY_THRESHOLD = 4;
+    private static final double SAFETY_THRESHOLD = 0.5; //TESTING THIS VALUE...
 
     public ArrayList<Double> speedlog = new ArrayList<>(); //contains a list of the average accelerations
     public ArrayList<Double> speedwindow = new ArrayList<>(); //temporary list of acceleration
@@ -153,15 +153,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //TODO: also find the speed in the first part of the window, and in the last part of the window
                 lastUpdate = curTime;
                 if(speed>SAFETY_THRESHOLD){ //speeding
-                    if(!collecting){ //wasn't previously speeding
-                        prevFailure=lastUpdate;
-                    }
+                    prevFailure=lastUpdate;
                     //set the text to say that fast acceleration reported
                     warning.setText("fast acceleration...");
                     collecting = true;
                 }else{ //not speeding, so not collecting data, check if there's enough data in speedwindow
                     collecting = false;
-                    if(speedwindow.size()>=5){ //500 milliseconds or more
+                    if(speedwindow.size()>=4){ //500 milliseconds or more
                         double totalspeed=0;
                         for(double a: speedwindow){
                             totalspeed+=a;
@@ -191,11 +189,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(collecting){
                     if(lastUpdate-prevFailure<200){//consecutive data collection, so add member
                         speedwindow.add(speed);
-                        prevFailure=lastUpdate;
                     }else{//you've just started speeding so clear array and start over repopulating it
                         speedwindow.clear();
                         speedwindow.add(speed);
-                        prevFailure=lastUpdate;
                     }
                 }
                 updateSpeed(speed, x, y, z);

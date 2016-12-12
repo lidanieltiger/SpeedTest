@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public ArrayList<Double> speedlog = new ArrayList<>(); //contains a list of the average accelerations
     public ArrayList<Double> speedwindow = new ArrayList<>(); //temporary list of acceleration
+    public ArrayList<Double[]> locations = new ArrayList<>();//contains the latitudes and longitudes of the speeding locations
 
     long prevFailure=0;
     boolean collecting = false;
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             case R.id.log_id:
                 Intent intent = new Intent(MainActivity.this, AccelerationLog.class);
                 intent.putExtra("arraylist", speedlog);
+                intent.putExtra("locations", locations);
                 startActivity(intent);
                 return true;
             default:
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             latitude = myLocation.getLatitude();
                             longitude = myLocation.getLongitude();
                         }
+                        locations.add(new Double[]{latitude, longitude, totalspeed});
                         //set the text to say that you were speeding
                         warning.setText("you were speeding for consecutive seconds!"+latitude+" "+longitude);
                     }

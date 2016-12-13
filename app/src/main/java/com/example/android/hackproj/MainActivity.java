@@ -43,7 +43,7 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    GoogleApiClient mGoogleApiClient; 
+    GoogleApiClient mGoogleApiClient;
     int REQUEST_LOCATION =0; //I have no idea what this does..
     double latitude = 0;
     double longitude = 0;

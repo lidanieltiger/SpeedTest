@@ -27,6 +27,7 @@ import java.util.*; //for arraylists
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    GoogleApiClient mGoogleApiClient; //SHA1 key F7:5E:1C:69:78:A8:73:0E:BD:68:4D:57:87:2D:16:E1:DE:B5:98:D4
+    GoogleApiClient mGoogleApiClient; 
     int REQUEST_LOCATION =0; //I have no idea what this does..
     double latitude = 0;
     double longitude = 0;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//this keeps the screen on
+        //TODO: make this app a background process
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     //.addConnectionCallbacks(this)
@@ -149,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //calculate whether or not to update the number now
             long curTime = System.currentTimeMillis();
             if ((curTime - lastUpdate) > 100) {
-                //TODO: calculate the average speed in a window
-                //TODO: also find the speed in the first part of the window, and in the last part of the window
+                //TODO: adjust the accuracy of our sensor when speeding so that it takes in more values. also change in acceleration should be within a reasonable limit so we can get rid of outliers
+                //TODO: find the speed in the first part of the window, and in the last part of the window
                 lastUpdate = curTime;
                 if(speed>SAFETY_THRESHOLD){ //speeding
                     prevFailure=lastUpdate;
@@ -189,9 +192,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(collecting){
                     if(lastUpdate-prevFailure<200){//consecutive data collection, so add member
                         speedwindow.add(speed);
+                        //TODO: add location too
                     }else{//you've just started speeding so clear array and start over repopulating it
                         speedwindow.clear();
                         speedwindow.add(speed);
+                        //TODO: add location too
                     }
                 }
                 updateSpeed(speed, x, y, z);

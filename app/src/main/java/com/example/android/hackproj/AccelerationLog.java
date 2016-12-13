@@ -55,6 +55,8 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
                     .position(temp)
                     .title(a[2].toString()));
         }
-
+        //draw a line here from the speedlog arraylist from point a to point b, c, etc...
+        //get the speed from the first two points of speedlog and the last two points of speedlog
+        //that gives you acceleration
     }
 }

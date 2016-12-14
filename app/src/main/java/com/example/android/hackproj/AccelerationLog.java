@@ -47,6 +47,16 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         ArrayList<Double[]> temp = new ArrayList<>();
 
         Set <String> set=sharedpreferences.getStringSet(day, new HashSet<String>());
+        if (set.size()!=0){
+            for (String s: set){ //traverse through the string set
+                int num1 = s.indexOf('-');
+                int num2 = s.indexOf('+');
+                double v1 = Double.parseDouble(s.substring(0,num1));
+                double v2 = Double.parseDouble(s.substring(num1+1,num2));
+                double v3 = Double.parseDouble (s.substring(num2+1, s.length()));
+                temp.add(new Double[]{v1, v2, v3});
+            }
+        }
         //add the elements from set to temp
         return temp;
     }
@@ -58,12 +68,12 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         CameraPosition target = CameraPosition.builder().target(newYork).zoom(14).build();
         m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
 
-        ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist");
-        /*TESTING HERE...
+        //ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist");
+
         Calendar c = Calendar.getInstance();
         int date = c.get(Calendar.DAY_OF_YEAR);
         ArrayList<Double[]> listDouble = decodePreferences(Integer.toString(date));
-        */
+
 
         for (Double[] a: listDouble){
             LatLng temp = new LatLng(a[1], a[2]);

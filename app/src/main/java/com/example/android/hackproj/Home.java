@@ -66,7 +66,7 @@ public class Home extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         Set<String> set = new HashSet<String>();
         for(Double[] a : logs){
-            set.add(a[0].toString()+"|"+a[1].toString()+"|"+a[2].toString()); //change this to char arrays[4] so that i don't have to do toString, that'll make it faster
+            set.add(a[0].toString()+"-"+a[1].toString()+"+"+a[2].toString()); //change this to char arrays[4] so that i don't have to do toString, that'll make it faster
         }
         Calendar c = Calendar.getInstance();
         int date = c.get(Calendar.DAY_OF_YEAR);

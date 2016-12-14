@@ -1,19 +1,15 @@
 package com.example.android.hackproj;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.SensorEventListener;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -27,20 +23,15 @@ import java.util.*; //for arraylists
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class DriveSession extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     GoogleApiClient mGoogleApiClient;
@@ -63,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_session);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//this keeps the screen on
         //TODO: make this app a background process
         if (mGoogleApiClient == null) {
@@ -78,10 +69,56 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
         TextView isFirst = (TextView)findViewById(R.id.first_launch);
-        boolean isFirstTime = MainActivity.isFirst(MainActivity.this);
+        boolean isFirstTime = DriveSession.isFirst(DriveSession.this);
         if(!isFirstTime){
             isFirst.setText("not first"); //TODO: MAKE A TUTORIAL
         }
+        //QUIT BUTTON send data back
+        Button quit = (Button) findViewById(R.id.quitbutton);
+        quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result",speedlog);
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
+            }
+        });
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(DriveSession.this);
+        builder1.setMessage("Are you sure you want to quit?");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(
+                "Yes, Save this session",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("result",speedlog);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        finish();
+                    }
+                });
+        builder1.setNegativeButton(
+                "no, I didn't mean to",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        builder1.setNeutralButton(
+                "Yes, but don't save this session",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
+                        finish();
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -101,27 +138,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             editor.commit();
         }
         return first;
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){ //stuff for the menu
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings_id:
-                return true;
-            case R.id.log_id:
-                Intent intent = new Intent(MainActivity.this, AccelerationLog.class);
-                intent.putExtra("arraylist", speedlog);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
     }
     protected void onPause() {
         super.onPause();

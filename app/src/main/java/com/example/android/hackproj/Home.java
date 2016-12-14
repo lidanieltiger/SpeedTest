@@ -16,12 +16,14 @@ import android.view.View;
 
 import java.util.*;
 
+import static java.util.Calendar.DAY_OF_YEAR;
+
 public class Home extends AppCompatActivity {
-    HashMap <String, Collection<Double[]>> driveLogs = new HashMap<>();
-    ArrayList <Double[]> temp = new ArrayList<>();
+    ArrayList <Double[]> driveLog = new ArrayList<>();
     //date/time, arraylist of arrays (speedlog)
     SharedPreferences sharedpreferences;
-    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String MyPREFERENCES = "ACCELERATION_DATA" ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,18 +53,26 @@ public class Home extends AppCompatActivity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                temp = (ArrayList<Double[]>) data.getSerializableExtra("result");
-                //SharedPreferences.Editor editor = sharedpreferences.edit();
-                //Set<Double[]> foo = new HashSet<Double[]>(temp);
-                //editor.putDoubleSet
-                //convert list to hashset
-                //TODO: write to sharedpreferences
+                driveLog = (ArrayList<Double[]>) data.getSerializableExtra("result");
+                saveList(driveLog);
+                //TODO: write to sharedpreferences -- call a function
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
+                //nothing happens!
             }
         }
-    }//onActivityResult
+    }
+    public void saveList (ArrayList<Double[]> logs){
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        Set<String> set = new HashSet<String>();
+        for(Double[] a : logs){
+            set.add(a[0].toString()+"|"+a[1].toString()+"|"+a[2].toString()); //change this to char arrays[4] so that i don't have to do toString, that'll make it faster
+        }
+        Calendar c = Calendar.getInstance();
+        int date = c.get(Calendar.DAY_OF_YEAR);
+        editor.putStringSet(Integer.toString(date), set); //if there's already a key there (not the first drive of the day, make the key name like date2)
+        editor.commit();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -70,7 +80,7 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
-                intent.putExtra("arraylist", temp); //TODO: change accelerationlog so that it works with a hashmap
+                intent.putExtra("arraylist", driveLog); //TODO: change accelerationlog so that it works with a hashmap
                 startActivity(intent);
                 return true;
             default:

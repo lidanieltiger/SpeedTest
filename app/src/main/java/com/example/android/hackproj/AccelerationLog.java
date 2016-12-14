@@ -1,5 +1,7 @@
 package com.example.android.hackproj;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
     private LinearLayout mLayout;
     private ListView listview;
     private boolean mapReady = false;
+
     GoogleMap m_map;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,16 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+    public ArrayList<Double[]> decodePreferences(String day){ //takes day as parameter, gives you the arraylist(s) for that day???
+        SharedPreferences sharedpreferences = getSharedPreferences(Home.MyPREFERENCES, Context.MODE_PRIVATE);
+        ArrayList<Double[]> temp = new ArrayList<>();
 
+        Set <String> set=sharedpreferences.getStringSet(day, new HashSet<String>());
+        //add the elements from set to temp
+        return temp;
+    }
     @Override
-    public void onMapReady(GoogleMap map) {
+    public void onMapReady(GoogleMap map) { //TODO: decode the stringset from mypreferences
         mapReady=true;
         m_map=map;
         LatLng newYork = new LatLng(37.328413, -122.058676);
@@ -49,6 +59,12 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
 
         ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist");
+        /*TESTING HERE...
+        Calendar c = Calendar.getInstance();
+        int date = c.get(Calendar.DAY_OF_YEAR);
+        ArrayList<Double[]> listDouble = decodePreferences(Integer.toString(date));
+        */
+
         for (Double[] a: listDouble){
             LatLng temp = new LatLng(a[1], a[2]);
             map.addMarker(new MarkerOptions()

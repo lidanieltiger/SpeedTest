@@ -47,16 +47,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     int REQUEST_LOCATION =0; //I have no idea what this does..
     double latitude = 0;
     double longitude = 0;
+    double GPS_speed = 0;
 
     private static final String MY_PREFERENCES = "my_preferences"; //used to check if it's the first time opening the app
 
     private long lastUpdate = 0;
     private static final int UPDATE_THRESHOLD = 0;
-    private static final double SAFETY_THRESHOLD = 0.5; //TESTING THIS VALUE...
+    private static final double SAFETY_THRESHOLD = 0.6; //TESTING THIS VALUE...
 
-    public ArrayList<Double> speedlog = new ArrayList<>(); //contains a list of the average accelerations
-    public ArrayList<Double> speedwindow = new ArrayList<>(); //temporary list of acceleration
-    public ArrayList<Double[]> locations = new ArrayList<>();//contains the latitudes and longitudes of the speeding locations
+    public ArrayList<Double[]> speedlog = new ArrayList<>(); //contains a list of the average accelerations
+    public ArrayList<Double[]> speedwindow = new ArrayList<>(); //temporary list of acceleration, lat, long
 
     long prevFailure=0;
     boolean collecting = false;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         TextView isFirst = (TextView)findViewById(R.id.first_launch);
         boolean isFirstTime = MainActivity.isFirst(MainActivity.this);
         if(!isFirstTime){
-            isFirst.setText("not first"); //TODO: SET CALIBRATION
+            isFirst.setText("not first"); //TODO: MAKE A TUTORIAL
         }
     }
     protected void onStart() {
@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             case R.id.log_id:
                 Intent intent = new Intent(MainActivity.this, AccelerationLog.class);
                 intent.putExtra("arraylist", speedlog);
-                intent.putExtra("locations", locations);
                 startActivity(intent);
                 return true;
             default:
@@ -163,26 +162,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }else{ //not speeding, so not collecting data, check if there's enough data in speedwindow
                     collecting = false;
                     if(speedwindow.size()>=4){ //500 milliseconds or more
-                        double totalspeed=0;
-                        for(double a: speedwindow){
-                            totalspeed+=a;
+                        /*double totalspeed=0;
+                        for(Double[] a: speedwindow){
+                            totalspeed+=a[0];
                         }
-                        totalspeed/=speedwindow.size();
-                        speedlog.add(totalspeed);
-                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            // Check Permissions Now
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_LOCATION);
-                        } else {
-                            // permission has been granted, continue as usual
-                            Location myLocation =
-                                    LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                            latitude = myLocation.getLatitude();
-                            longitude = myLocation.getLongitude();
-                        }
-                        locations.add(new Double[]{latitude, longitude, totalspeed});
+                        totalspeed/=speedwindow.size(); THIS CODE USES THE ACCELEROMETERS*/
+                        double acceleration = (speedwindow.get(speedwindow.size()-1)[3]-speedwindow.get(0)[3]); //gives meters/second^2
+                        speedlog.add(new Double[] {acceleration, speedwindow.get(speedwindow.size()-1)[1]
+                        , speedwindow.get(speedwindow.size()-1)[2]}); //beginning location/speed, end location/speed
                         //set the text to say that you were speeding
                         warning.setText("you were speeding for "+speedwindow.size()*100+" consecutive milliseconds!");
                     }
@@ -190,13 +177,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     speedwindow.clear();
                 }
                 if(collecting){
+                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) //GET LOCATION DATA
+                            != PackageManager.PERMISSION_GRANTED) {
+                        // Check Permissions Now
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                REQUEST_LOCATION);
+                    } else {
+                        // permission has been granted, continue as usual
+                        Location myLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                        latitude = myLocation.getLatitude();
+                        longitude = myLocation.getLongitude();
+                        GPS_speed = myLocation.getSpeed();
+                    }
                     if(lastUpdate-prevFailure<200){//consecutive data collection, so add member
-                        speedwindow.add(speed);
-                        //TODO: add location too
+                        speedwindow.add(new Double[] {speed, latitude, longitude, GPS_speed} );
                     }else{//you've just started speeding so clear array and start over repopulating it
                         speedwindow.clear();
-                        speedwindow.add(speed);
-                        //TODO: add location too
+                        speedwindow.add(new Double[] {speed, latitude, longitude, GPS_speed} );
                     }
                 }
                 updateSpeed(speed, x, y, z);

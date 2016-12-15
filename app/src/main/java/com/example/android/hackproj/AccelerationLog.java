@@ -47,17 +47,17 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         SharedPreferences sharedpreferences = getSharedPreferences(Home.MyPREFERENCES, Context.MODE_PRIVATE);
         ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();
         int numlogs = sharedpreferences.getInt("numLogsOn:"+day, 0); //number of logs in a given day
-        Log.d("numlogs2", "numlogs"+numlogs);
-        for(int i = 0; i <numlogs; i++){
+        Log.d("numlogs2", "numlogs: "+numlogs);
+        for(int i = 0; i <numlogs; i++){ //problem: daydata is full of identical data sets?
             String logdate = day+"index:"+Integer.toString(i); //the key to grab a stringset
             Set <String> set=sharedpreferences.getStringSet(logdate, new HashSet<String>());
             ArrayList<Double[]> temp = new ArrayList<>();
             for (String s: set){ //traverse through the string set
-                int num1 = s.indexOf('-');
-                int num2 = s.indexOf('+');
+                int num1 = s.indexOf('@');
+                int num2 = s.indexOf('#');
                 double v1 = Double.parseDouble(s.substring(0,num1));
                 double v2 = Double.parseDouble(s.substring(num1+1,num2));
-                double v3 = Double.parseDouble (s.substring(num2+1, s.length()));
+                double v3 = Double.parseDouble(s.substring(num2+1, s.length()));
                 temp.add(new Double[]{v1, v2, v3});
             }
             daydata.add(temp);
@@ -79,13 +79,16 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         int date = c.get(Calendar.DAY_OF_YEAR);
         ArrayList<ArrayList<Double[]>> daydata = decodePreferences(Integer.toString(date));
         Log.d("numlogs","day data size: "+Integer.toString(daydata.size()));
-        ArrayList<Double[]> listDouble = daydata.get(0);
-
-        for (Double[] a: listDouble){
-            LatLng temp = new LatLng(a[1], a[2]);
-            map.addMarker(new MarkerOptions()
-                    .position(temp)
-                    .title(a[0].toString())); //when you press it gives you acceleration in m/s^2
+        for(int i = 0; i < daydata.size(); i++){
+            Log.d("loop", "loop iteration: "+i);
+            ArrayList<Double[]> listDouble = daydata.get(i);
+            for (Double[] a: listDouble){
+                Log.d("loop", "point in loop: "+a[0]+","+a[1]+","+a[2]);
+                LatLng temp = new LatLng(a[1], a[2]);
+                map.addMarker(new MarkerOptions()
+                        .position(temp)
+                        .title(a[0].toString())); //when you press it gives you acceleration in m/s^2
+            }
         }
         //draw a line here from the speedlog arraylist from point a to point b, c, etc...
         //get the speed from the first two points of speedlog and the last two points of speedlog

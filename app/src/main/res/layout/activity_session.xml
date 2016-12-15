@@ -2,9 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,11 +28,22 @@
         android:text="first launch"
         android:id="@+id/first_launch"
         android:layout_gravity="center_horizontal" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:text="QUIT"
+        android:layout_width="320dp"
+        android:layout_height="70dp"
+        android:id="@+id/quitbutton"
+        android:layout_gravity="center_horizontal"
+        android:theme="@style/MyButton"
+        android:layout_weight="0.03"
+        android:stateListAnimator="@null"/>
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/quitbutton" />
+        android:layout_height="30dp" />
 
 </LinearLayout>

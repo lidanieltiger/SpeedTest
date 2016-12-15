@@ -9,10 +9,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.*;
 
@@ -30,6 +32,7 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE); //this contains my data
 
+        //TETING BELOW... TODO: remove this eventually
         SharedPreferences preferences = getSharedPreferences(MyPREFERENCES, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
@@ -39,8 +42,8 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button quit = (Button) findViewById(R.id.startbutton);
+        quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this, DriveSession.class);
@@ -69,13 +72,17 @@ public class Home extends AppCompatActivity {
     }
     public void saveList (ArrayList<Double[]> logs){
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for(Double[] a : logs){
-            set.add(a[0].toString()+"-"+a[1].toString()+"+"+a[2].toString()); //change this to char arrays[4] so that i don't have to do toString, that'll make it faster
+            Log.d("stringloop", "iterate1");
+            set.add(a[0].toString()+"@"+a[1].toString()+"#"+a[2].toString());
+            //NOTE: a lot of the time there are duplicate points that are being overriden here. need to tweak my algorithm so this happens
+            //LESS OFTEN...
         }
         Calendar c = Calendar.getInstance();
         String day = Integer.toString(c.get(Calendar.DAY_OF_YEAR));
         int numlogs = sharedpreferences.getInt("numLogsOn:"+day, 0);
+        Log.d("homelog", "numlogs: "+numlogs);
         String logdate = day+"index:"+Integer.toString(numlogs); //(day)index:0,1,2...
         editor.putStringSet(logdate, set);
         editor.putInt("numLogsOn:"+day, ++numlogs);
@@ -88,7 +95,7 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
-                intent.putExtra("arraylist", driveLog);
+                intent.putExtra("arraylist", driveLog); //TODO: remove this eventually
                 startActivity(intent);
                 return true;
             default:

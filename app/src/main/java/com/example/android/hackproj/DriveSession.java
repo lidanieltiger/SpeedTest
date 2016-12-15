@@ -44,7 +44,7 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
 
     private long lastUpdate = 0;
     private static final int UPDATE_THRESHOLD = 0;
-    private static final double SAFETY_THRESHOLD = 0.6; //TESTING THIS VALUE...
+    private static final double SAFETY_THRESHOLD = 0.8; //TESTING THIS VALUE...
 
     public ArrayList<Double[]> speedlog = new ArrayList<>(); //contains a list of the average accelerations
     public ArrayList<Double[]> speedwindow = new ArrayList<>(); //temporary list of acceleration, lat, long

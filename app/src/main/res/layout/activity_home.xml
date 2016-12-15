@@ -7,6 +7,41 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.android.hackproj.Home">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:text="\t Welcome, Driver \n \n \t Sessions Recorded Today: 0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Start Session"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/startbutton"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Previous Logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            android:layout_weight="1" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+    </LinearLayout>
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,13 +55,5 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="182dp"
-        android:layout_height="133dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/quantum_ic_play_circle_filled_white_36" />
 
 </android.support.design.widget.CoordinatorLayout>

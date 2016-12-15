@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.LinearLayout;
@@ -42,12 +43,15 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-    public ArrayList<Double[]> decodePreferences(String day){ //takes day as parameter, gives you the arraylist(s) for that day???
+    public ArrayList<ArrayList<Double[]>> decodePreferences(String day){
         SharedPreferences sharedpreferences = getSharedPreferences(Home.MyPREFERENCES, Context.MODE_PRIVATE);
-        ArrayList<Double[]> temp = new ArrayList<>();
-
-        Set <String> set=sharedpreferences.getStringSet(day, new HashSet<String>());
-        if (set.size()!=0){
+        ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();
+        int numlogs = sharedpreferences.getInt("numLogsOn:"+day, 0); //number of logs in a given day
+        Log.d("numlogs2", "numlogs"+numlogs);
+        for(int i = 0; i <numlogs; i++){
+            String logdate = day+"index:"+Integer.toString(i); //the key to grab a stringset
+            Set <String> set=sharedpreferences.getStringSet(logdate, new HashSet<String>());
+            ArrayList<Double[]> temp = new ArrayList<>();
             for (String s: set){ //traverse through the string set
                 int num1 = s.indexOf('-');
                 int num2 = s.indexOf('+');
@@ -56,9 +60,10 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
                 double v3 = Double.parseDouble (s.substring(num2+1, s.length()));
                 temp.add(new Double[]{v1, v2, v3});
             }
+            daydata.add(temp);
         }
         //add the elements from set to temp
-        return temp;
+        return daydata;
     }
     @Override
     public void onMapReady(GoogleMap map) { //TODO: decode the stringset from mypreferences
@@ -68,12 +73,13 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         CameraPosition target = CameraPosition.builder().target(newYork).zoom(14).build();
         m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
 
-        //ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist");
+        //ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist"); no longer using this
 
         Calendar c = Calendar.getInstance();
         int date = c.get(Calendar.DAY_OF_YEAR);
-        ArrayList<Double[]> listDouble = decodePreferences(Integer.toString(date));
-
+        ArrayList<ArrayList<Double[]>> daydata = decodePreferences(Integer.toString(date));
+        Log.d("numlogs","day data size: "+Integer.toString(daydata.size()));
+        ArrayList<Double[]> listDouble = daydata.get(0);
 
         for (Double[] a: listDouble){
             LatLng temp = new LatLng(a[1], a[2]);

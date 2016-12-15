@@ -30,6 +30,12 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE); //this contains my data
 
+        SharedPreferences preferences = getSharedPreferences(MyPREFERENCES, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        //CLEAR MYPREFERENCES FOR TESTING PURPOSES
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,7 +61,6 @@ public class Home extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 driveLog = (ArrayList<Double[]>) data.getSerializableExtra("result");
                 saveList(driveLog);
-                //TODO: write to sharedpreferences -- call a function
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //nothing happens!
@@ -69,8 +74,11 @@ public class Home extends AppCompatActivity {
             set.add(a[0].toString()+"-"+a[1].toString()+"+"+a[2].toString()); //change this to char arrays[4] so that i don't have to do toString, that'll make it faster
         }
         Calendar c = Calendar.getInstance();
-        int date = c.get(Calendar.DAY_OF_YEAR);
-        editor.putStringSet(Integer.toString(date), set); //if there's already a key there (not the first drive of the day, make the key name like date2)
+        String day = Integer.toString(c.get(Calendar.DAY_OF_YEAR));
+        int numlogs = sharedpreferences.getInt("numLogsOn:"+day, 0);
+        String logdate = day+"index:"+Integer.toString(numlogs); //(day)index:0,1,2...
+        editor.putStringSet(logdate, set);
+        editor.putInt("numLogsOn:"+day, ++numlogs);
         editor.commit();
     }
     @Override
@@ -80,7 +88,7 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
-                intent.putExtra("arraylist", driveLog); //TODO: change accelerationlog so that it works with a hashmap
+                intent.putExtra("arraylist", driveLog);
                 startActivity(intent);
                 return true;
             default:

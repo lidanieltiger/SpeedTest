@@ -1,11 +1,16 @@
 package com.example.android.hackproj;
 
+import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.LinearLayout;
@@ -20,30 +25,58 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.*;
-public class AccelerationLog extends FragmentActivity implements OnMapReadyCallback {
+public class AccelerationLog extends Activity { //changed from extends fragment activity + implements OnMapReadyCallback
     private LinearLayout mLayout;
     private ListView listview;
-    private boolean mapReady = false;
+    private int numlistlogs = 1;
 
-    GoogleMap m_map;
+    //private boolean mapReady = false;
+    public String DAY_OF_YEAR;
+    SharedPreferences sharedpreferences;
+
+    //listview elements
+    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+
+    //GoogleMap m_map;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acceleration_log);
         mLayout = (LinearLayout) findViewById(R.id.logLayout);
         listview = (ListView) findViewById(R.id.speedList);
-        ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist");
-        ArrayAdapter<Double[]> arrayAdapter = new ArrayAdapter<>( //TODO: modify the array adapter later once I figure out what I want it to show
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
-                listDouble );
+                listItems );
         listview.setAdapter(arrayAdapter);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //access sharedpreferences
+        sharedpreferences = getSharedPreferences(Home.MyPREFERENCES, Context.MODE_PRIVATE);
+
+        //init day of the year to be the current day
+        Calendar c = Calendar.getInstance();
+        DAY_OF_YEAR= Integer.toString(c.get(Calendar.DAY_OF_YEAR));
+        ArrayList<ArrayList<Double[]>> logList = decodePreferences(DAY_OF_YEAR);
+        for(ArrayList<Double[]> a: logList){
+            arrayAdapter.add("log: "+numlistlogs);
+            numlistlogs++;
+        }
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position,
+                                    long id) {
+                Log.d("list", Long.toString(id));
+                //Intent intent = new Intent(this, TargetActivity.class);
+                //startActivity(intent);
+            }
+        });
+
+        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        //mapFragment.getMapAsync(this);
     }
     public ArrayList<ArrayList<Double[]>> decodePreferences(String day){
-        SharedPreferences sharedpreferences = getSharedPreferences(Home.MyPREFERENCES, Context.MODE_PRIVATE);
         ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();
         int numlogs = sharedpreferences.getInt("numLogsOn:"+day, 0); //number of logs in a given day
         Log.d("numlogs2", "numlogs: "+numlogs);
@@ -64,6 +97,7 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         //add the elements from set to temp
         return daydata;
     }
+    /*
     @Override
     public void onMapReady(GoogleMap map) { //TODO: decode the stringset from mypreferences
         mapReady=true;
@@ -93,4 +127,13 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
         //get the speed from the first two points of speedlog and the last two points of speedlog
         //that gives you acceleration
     }
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"
+    />
+    */
+
 }

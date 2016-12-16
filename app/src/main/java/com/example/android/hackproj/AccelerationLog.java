@@ -28,17 +28,17 @@ import java.util.*;
 public class AccelerationLog extends Activity { //changed from extends fragment activity + implements OnMapReadyCallback
     private LinearLayout mLayout;
     private ListView listview;
-    private int numlistlogs = 1;
 
-    //private boolean mapReady = false;
+    //variables used in the class
     public String DAY_OF_YEAR;
     SharedPreferences sharedpreferences;
+    ArrayList<ArrayList<Double[]>> logList;
 
     //listview elements
     ArrayList<String> listItems=new ArrayList<String>();
     ArrayAdapter<String> adapter;
+    private int numlistlogs = 1;
 
-    //GoogleMap m_map;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +57,9 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
         //init day of the year to be the current day
         Calendar c = Calendar.getInstance();
         DAY_OF_YEAR= Integer.toString(c.get(Calendar.DAY_OF_YEAR));
-        ArrayList<ArrayList<Double[]>> logList = decodePreferences(DAY_OF_YEAR);
-        for(ArrayList<Double[]> a: logList){
+        logList = decodePreferences(DAY_OF_YEAR);                       //set logList (the list of logs for the day) to the current day of year
+                                                                        //TODO: refresh DAY_OF_YEAR and logList based on different days
+        for(int i = 0; i < logList.size(); i++){                        //create the listview based on number of logs for a given day  TODO: refresh it based on different days
             arrayAdapter.add("log: "+numlistlogs);
             numlistlogs++;
         }
@@ -68,13 +69,12 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
             public void onItemClick(AdapterView<?> a, View v, int position,
                                     long id) {
                 Log.d("list", Long.toString(id));
-                //Intent intent = new Intent(this, TargetActivity.class);
-                //startActivity(intent);
+                ArrayList<Double[]> sendData = logList.get((int)id);                //get the correct log data
+                Intent intent = new Intent(AccelerationLog.this, displaydata.class);//start a new intent and send them the data for the day
+                intent.putExtra("log", sendData);
+                startActivity(intent);
             }
         });
-
-        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
     }
     public ArrayList<ArrayList<Double[]>> decodePreferences(String day){
         ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();
@@ -97,43 +97,4 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
         //add the elements from set to temp
         return daydata;
     }
-    /*
-    @Override
-    public void onMapReady(GoogleMap map) { //TODO: decode the stringset from mypreferences
-        mapReady=true;
-        m_map=map;
-        LatLng newYork = new LatLng(37.328413, -122.058676);
-        CameraPosition target = CameraPosition.builder().target(newYork).zoom(14).build();
-        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
-
-        //ArrayList<Double[]> listDouble = (ArrayList<Double[]>) getIntent().getSerializableExtra("arraylist"); no longer using this
-
-        Calendar c = Calendar.getInstance();
-        int date = c.get(Calendar.DAY_OF_YEAR);
-        ArrayList<ArrayList<Double[]>> daydata = decodePreferences(Integer.toString(date));
-        Log.d("numlogs","day data size: "+Integer.toString(daydata.size()));
-        for(int i = 0; i < daydata.size(); i++){
-            Log.d("loop", "loop iteration: "+i);
-            ArrayList<Double[]> listDouble = daydata.get(i);
-            for (Double[] a: listDouble){
-                Log.d("loop", "point in loop: "+a[0]+","+a[1]+","+a[2]);
-                LatLng temp = new LatLng(a[1], a[2]);
-                map.addMarker(new MarkerOptions()
-                        .position(temp)
-                        .title(a[0].toString())); //when you press it gives you acceleration in m/s^2
-            }
-        }
-        //draw a line here from the speedlog arraylist from point a to point b, c, etc...
-        //get the speed from the first two points of speedlog and the last two points of speedlog
-        //that gives you acceleration
-    }
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"
-    />
-    */
-
 }

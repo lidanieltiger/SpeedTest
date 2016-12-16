@@ -107,7 +107,6 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
-                intent.putExtra("arraylist", driveLog); //TODO: remove this eventually
                 startActivity(intent);
                 return true;
             default:

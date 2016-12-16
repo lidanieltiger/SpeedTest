@@ -39,8 +39,7 @@ public class AccelerationLog extends FragmentActivity implements OnMapReadyCallb
                 listDouble );
         listview.setAdapter(arrayAdapter);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
     public ArrayList<ArrayList<Double[]>> decodePreferences(String day){

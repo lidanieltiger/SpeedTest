@@ -37,7 +37,7 @@ public class displaydata extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap map) { //TODO: decode the stringset from mypreferences
         mapReady=true;
         m_map=map;
-        LatLng newYork = new LatLng(37.328413, -122.058676);
+        LatLng newYork = new LatLng(34.073276, -118.452396);
         CameraPosition target = CameraPosition.builder().target(newYork).zoom(14).build();
         m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
 

@@ -8,8 +8,13 @@ import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -25,7 +30,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.*;
-public class AccelerationLog extends Activity { //changed from extends fragment activity + implements OnMapReadyCallback
+public class AccelerationLog extends AppCompatActivity { //changed from extends fragment activity + implements OnMapReadyCallback
     private LinearLayout mLayout;
     private ListView listview;
 
@@ -42,7 +47,11 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE); //trying to remove the title bar
         setContentView(R.layout.activity_acceleration_log);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.log_toolbar);
+        setSupportActionBar(toolbar);
+
         mLayout = (LinearLayout) findViewById(R.id.logLayout);
         listview = (ListView) findViewById(R.id.speedList);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -75,6 +84,12 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){ //stuff for the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_log, menu);
+        return true;
     }
     public ArrayList<ArrayList<Double[]>> decodePreferences(String day){
         ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();

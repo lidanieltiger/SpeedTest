@@ -103,8 +103,6 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings_id:
-                return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
                 startActivity(intent);

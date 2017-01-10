@@ -47,10 +47,15 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE); //trying to remove the title bar
         setContentView(R.layout.activity_acceleration_log);
         Toolbar toolbar = (Toolbar) findViewById(R.id.log_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); //getting rid of the title
+        //toolbar.setNavigationIcon(R.drawable.ic_toolbar);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
+        //toolbar.setLogo(R.drawable.ic_toolbar);
+
 
         mLayout = (LinearLayout) findViewById(R.id.logLayout);
         listview = (ListView) findViewById(R.id.speedList);

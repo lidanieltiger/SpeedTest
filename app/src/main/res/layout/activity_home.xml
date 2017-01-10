@@ -7,58 +7,20 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.android.hackproj.Home">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme"> <!--@style/AppTheme.AppBarOverlay-->
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:layout_gravity="center"
-                android:id="@+id/toolbar_title" />
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <View
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             />
-
-        <RelativeLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="253dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_weight="1.5"
-                android:src="@drawable/tire"
-                android:id="@+id/imageView"
-                android:layout_alignParentBottom="true" />
-
-            <Button
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/button2"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:background="@drawable/ic_play_light"
-                android:elevation="0dp"
-                android:layout_alignTop="@+id/imageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="76dp" />
-        </RelativeLayout>
+            android:layout_height="100dp"
+            android:layout_weight="1.5"
+            android:src="@drawable/tire"
+            android:id="@+id/imageView" />
 
         <TextView
             android:text="\t Welcome, Driver \n \n \t Sessions Recorded Today: 0"
@@ -79,5 +41,26 @@
             android:layout_width="match_parent"
             android:layout_height="20dp" />
     </LinearLayout>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

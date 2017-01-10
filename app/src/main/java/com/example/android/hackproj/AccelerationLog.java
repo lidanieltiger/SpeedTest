@@ -9,8 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -77,12 +75,6 @@ public class AccelerationLog extends Activity { //changed from extends fragment 
                 startActivity(intent);
             }
         });
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){ //stuff for the menu
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
     }
     public ArrayList<ArrayList<Double[]>> decodePreferences(String day){
         ArrayList<ArrayList<Double[]>> daydata = new ArrayList<>();

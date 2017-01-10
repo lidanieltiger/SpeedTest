@@ -6,6 +6,10 @@
         android:title="Log"
         app:showAsAction="ifRoom"/>
         />
+    <item
+        android:id="@+id/settings_id"
+        android:title="@+id/settings"
+        app:showAsAction="never"/>
     />
     <!-- Settings, should always be in the overflow -->
 

@@ -50,6 +50,11 @@ public class Home extends AppCompatActivity {
         //init toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); //getting rid of the title
+        //toolbar.setNavigationIcon(R.drawable.ic_toolbar);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
+        //toolbar.setLogo(R.drawable.ic_toolbar);
 
         Button quit = (Button) findViewById(R.id.startbutton);
         quit.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +108,8 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.settings_id:
+                return true;
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
                 startActivity(intent);

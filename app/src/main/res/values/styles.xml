@@ -1,11 +1,11 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/material_grey</item> <!--colorPrimary-->
+        <item name="colorPrimaryDark">@color/material_greyDark</item>  <!--colorPrimaryDark-->
+        <item name="colorAccent">@color/colorAccent</item> <!--colorAccent-->
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -13,9 +13,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="colorPrimary">@color/material_grey</item> <!--colorPrimary-->
+        <item name="colorPrimaryDark">@color/material_greyDark</item>  <!--colorPrimaryDark-->
+        <item name="colorAccent">@color/colorAccent</item> <!--colorAccent-->
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="colorPrimary">@color/material_grey</item> <!--colorPrimary-->
+        <item name="colorPrimaryDark">@color/material_greyDark</item>  <!--colorPrimaryDark-->
+        <item name="colorAccent">@color/colorAccent</item> <!--colorAccent-->
+    </style>
 
     <style name="MyButton" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">@color/material_indigo</item>

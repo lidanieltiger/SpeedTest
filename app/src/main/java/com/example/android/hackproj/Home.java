@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,11 +15,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.*;
 
+import static com.example.android.hackproj.R.color.colorPrimaryDark;
 import static java.util.Calendar.DAY_OF_YEAR;
 
 public class Home extends AppCompatActivity {
@@ -55,7 +58,6 @@ public class Home extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         //toolbar.setLogo(R.drawable.ic_toolbar);
-
         Button quit = (Button) findViewById(R.id.startbutton);
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +115,7 @@ public class Home extends AppCompatActivity {
             case R.id.log_id:
                 Intent intent = new Intent(Home.this, AccelerationLog.class);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

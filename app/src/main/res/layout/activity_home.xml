@@ -15,12 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_weight="1.5"
-            android:src="@drawable/tire"
-            android:id="@+id/imageView" />
 
         <TextView
             android:text="\t Welcome, Driver \n \n \t Sessions Recorded Today: 0"
@@ -34,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/startbutton"
-            android:layout_weight="1"
+            android:layout_weight="0.17"
             android:theme="@style/MyButton"/>
 
         <View
@@ -51,8 +45,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:background="@color/colorPrimary"
+            android:theme="@style/AppTheme"
+            android:elevation="0dp">
 
             <TextView
                 android:layout_width="wrap_content"

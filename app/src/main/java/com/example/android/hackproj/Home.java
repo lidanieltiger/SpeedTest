@@ -17,11 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.*;
 
 import static com.example.android.hackproj.R.color.colorPrimaryDark;
+import static com.example.android.hackproj.R.drawable.steering;
 import static java.util.Calendar.DAY_OF_YEAR;
 
 public class Home extends AppCompatActivity {
@@ -46,9 +48,6 @@ public class Home extends AppCompatActivity {
         //setting the number of logs recorded today on startup
         Calendar c = Calendar.getInstance();
         DAY_OF_YEAR= Integer.toString(c.get(Calendar.DAY_OF_YEAR));
-        TextView intro = (TextView)findViewById(R.id.introduction);
-        int numlogs = sharedpreferences.getInt("numLogsOn:"+DAY_OF_YEAR, 0); //number of logs in a given day
-        intro.setText("\t Welcome, Driver \n \n \t Sessions Recorded Today: "+numlogs);
 
         //init toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,12 +57,13 @@ public class Home extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setSubtitle("");
         //toolbar.setLogo(R.drawable.ic_toolbar);
-        Button quit = (Button) findViewById(R.id.startbutton);
-        quit.setOnClickListener(new View.OnClickListener() {
+        final ImageView begin = (ImageView) findViewById(R.id.startbutton);
+        begin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent intent = new Intent(Home.this, DriveSession.class);
                 startActivityForResult(intent, 1); //GRAB DATA FROM THE DRIVE SESSION
+                //TODO: fade animations
             }
         });
     }

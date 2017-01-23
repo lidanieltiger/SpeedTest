@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/background_white"
+    >
+    <TextView
+        android:text="Calibrate"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#07000000"
+        android:gravity="center"
+        android:id="@+id/calibrate"
+        android:textSize="40sp"
+        />
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout"
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:id="@+id/steering"
+        android:src="@drawable/steering"
+        android:layout_marginLeft="100dp"
+        android:layout_margin="90dp" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/session"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="START"
+        android:text="accelerating at: "
+        android:textColor="#212121"
         android:id="@+id/AccelDisplay"
         android:layout_gravity="center_horizontal" />
 
@@ -21,29 +54,24 @@
         android:id="@+id/isReckless"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="first launch"
-        android:id="@+id/first_launch"
-        android:layout_gravity="center_horizontal" />
-    <View
+
+        <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
-        android:text="QUIT"
-        android:layout_width="320dp"
-        android:layout_height="70dp"
-        android:id="@+id/quitbutton"
-        android:layout_gravity="center_horizontal"
-        android:theme="@style/MyButton"
-        android:layout_weight="0.03"
-        android:stateListAnimator="@null"/>
-    <View
+        <Button
+            android:text="Finish"
+            android:layout_width="320dp"
+            android:layout_height="70dp"
+            android:id="@+id/quitbutton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.03"
+            android:background="@drawable/button_background"/>
+
+        <View
         android:layout_width="match_parent"
         android:layout_height="30dp" />
 
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

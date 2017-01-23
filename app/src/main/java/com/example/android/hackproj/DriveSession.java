@@ -1,5 +1,9 @@
 package com.example.android.hackproj;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,16 +24,26 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*; //for arraylists
 
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+
+import static android.R.attr.animation;
 
 public class DriveSession extends AppCompatActivity implements SensorEventListener{
     private SensorManager senSensorManager;
@@ -68,11 +82,6 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
-        TextView isFirst = (TextView)findViewById(R.id.first_launch);
-        boolean isFirstTime = DriveSession.isFirst(DriveSession.this);
-        if(!isFirstTime){
-            isFirst.setText("not first"); //TODO: MAKE A TUTORIAL
-        }
         //QUIT BUTTON send data back
         Button quit = (Button) findViewById(R.id.quitbutton);
         quit.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +91,24 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
                 returnIntent.putExtra("result",speedlog);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
+            }
+        });
+        //LinearLayout session = (LinearLayout)this.findViewById(R.id.session);
+        //session.setVisibility(View.GONE);
+        final TextView calibrate= (TextView) findViewById(R.id.calibrate);
+        final ImageView steering = (ImageView) findViewById(R.id.steering);
+        steering.setVisibility(View.INVISIBLE);
+        calibrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calibrate.setVisibility(View.INVISIBLE);
+                steering.setVisibility(View.VISIBLE);
+                //TODO: fade animations
+                RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                anim.setInterpolator(new DecelerateInterpolator());
+                anim.setRepeatCount(Animation.INFINITE);
+                anim.setDuration(1500);
+                steering.startAnimation(anim);
             }
         });
     }
@@ -151,7 +178,7 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
         TextView accelerometer = (TextView)findViewById(R.id.AccelDisplay);
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
-        accelerometer.setText("Accelerating at: "+df.format(speed)+" m/s^2"+" x: "+df.format(x)+" y: "+df.format(y)+" z: "+df.format(z));
+        accelerometer.setText("accelerating at: "+df.format(speed)+" m/s^2");
 
     }
     public void onSensorChanged(SensorEvent sensorEvent) {

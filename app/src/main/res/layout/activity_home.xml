@@ -8,34 +8,9 @@
     tools:context="com.example.android.hackproj.Home"
     android:background="@color/background_white">
 
-    <GridLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            />
-
-        <TextView
-            android:text="Welcome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/introduction"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/startbutton"
-            android:src="@drawable/play"
-            android:layout_row="2"
-            android:layout_column="0" />
-    </GridLayout>
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="85dp"
         android:theme="@style/AppTheme.AppBarOverlay">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -43,23 +18,78 @@
             android:layout_height="match_parent"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:theme="@style/AppTheme"
-            android:elevation="0dp">
+            android:elevation="0dp"
+            android:weightSum="1">
             <!--INSERT LOGO HERE-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="LOGO HERE"
-                android:layout_gravity="center"
-                android:id="@+id/toolbar_title" />
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/steering"
+                android:layout_width="245dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title"
+                android:src="@drawable/titletext"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/log_icon"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="17dp"
+                android:id="@+id/NEWLOGS"
                 />
         </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="Welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/introduction"
+            android:layout_marginTop="131dp"
+            android:textColor="#000000"
+            android:textSize="40sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:layout_width= "230dp"
+            android:layout_height="230dp"
+            android:id="@+id/tire"
+            android:src="@drawable/tire2"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:layout_marginTop="17dp"
+            android:layout_below="@+id/introduction"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="press the tire to start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tire"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:id="@+id/instruct1"
+            android:textColor="#000000"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/startbutton"
+            android:src="@drawable/play"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:layout_alignTop="@+id/tire"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="85dp" />
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

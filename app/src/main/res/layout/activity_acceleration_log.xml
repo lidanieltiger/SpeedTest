@@ -8,39 +8,39 @@
     android:layout_height="fill_parent">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        android:theme="@style/AppTheme"
-        app:elevation="0dp"
-        >
-
+        android:layout_height="80dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
         <android.support.v7.widget.Toolbar
-            android:id="@+id/log_toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             android:theme="@style/AppTheme"
-            android:background="@color/colorPrimary"
-            android:layout_height="90dp"
-            map:popupTheme="@style/AppTheme.PopupOverlay"
-            android:minHeight="30dp"
             android:elevation="0dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your Trips On: "
-                android:layout_gravity="center"
-                android:id="@+id/log_toolbar_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-            <TextView
-                android:layout_width="wrap_content"
+            <!--INSERT LOGO HERE-->
+            <ImageView
+                android:layout_width="245dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/log_date"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+                android:id="@+id/toolbar_title"
+                android:src="@drawable/titletext"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:text="Logs :"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:id="@+id/log_date"
+        android:background="#92DCE5"
+        android:textSize="40dp"
+        android:textColor="#101935"
+        android:gravity="center"
+        />
+
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="match_parent"

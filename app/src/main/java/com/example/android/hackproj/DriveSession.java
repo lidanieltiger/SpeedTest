@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.hardware.SensorEventListener;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
@@ -111,6 +112,19 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
                 steering.startAnimation(anim);
             }
         });
+        //SET FONTS
+        TextView display = (TextView) findViewById(R.id.AccelDisplay);
+        Button buttonquit = (Button) findViewById(R.id.quitbutton);
+        Typeface typeface=Typeface.createFromAsset(getAssets(), "fonts/BukhariScript.ttf");
+        Typeface typeface2=Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.otf");
+        display.setTypeface(typeface2);
+        buttonquit.setTypeface(typeface);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){ //stuff for the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
     @Override
     public void onBackPressed() {

@@ -6,6 +6,6 @@
     <color name="material_blue">#00B0FF</color>
     <color name="material_darkblue">#0091EA</color>
     <color name="material_indigo">#3f51b5</color>
-    <color name="background_white">#E3F2FD</color>
+    <color name="background_white">#FFFFFF</color>
     <color name="black_overlay">#66000000</color>"
 </resources>

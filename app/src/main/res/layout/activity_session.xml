@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/background_white"
-    >
+    android:background="@color/background_white">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:theme="@style/AppTheme"
+            android:elevation="0dp">
+            <!--INSERT LOGO HERE-->
+            <ImageView
+                android:layout_width="245dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title"
+                android:src="@drawable/titletext"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
     <TextView
         android:text="Calibrate"
         android:layout_width="fill_parent"
@@ -18,8 +41,8 @@
         />
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:gravity="center_vertical|center_horizontal|center"
@@ -36,12 +59,12 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        />
+        android:layout_weight="0.07" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="accelerating at: "
+        android:text="accelerating at: 0 m/s^2"
         android:textColor="#212121"
         android:id="@+id/AccelDisplay"
         android:layout_gravity="center_horizontal" />
@@ -54,24 +77,28 @@
         android:id="@+id/isReckless"
         android:layout_gravity="center_horizontal" />
 
+        <ImageView
+            android:layout_width= "250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:id="@+id/car"
+            android:src="@drawable/car" />
 
-        <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
         <Button
             android:text="Finish"
-            android:layout_width="320dp"
-            android:layout_height="70dp"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:layout_width="172dp"
+            android:layout_height="52dp"
             android:id="@+id/quitbutton"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.03"
             android:background="@drawable/button_background"/>
 
         <View
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="30dp"
+            android:layout_weight="0.06" />
 
     </LinearLayout>
 </RelativeLayout>

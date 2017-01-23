@@ -7,6 +7,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.LinearLayout;
@@ -56,7 +58,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acceleration_log);
         //initializing toolbar stuff
-        Toolbar toolbar = (Toolbar) findViewById(R.id.log_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false); //getting rid of the title
         //toolbar.setNavigationIcon(R.drawable.ic_toolbar);
@@ -80,10 +82,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
         showDialog();                                       //this is the dialog creator for the dateview
 
         //ArrayAdapter code to put stuff into the listview
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                listItems ){
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems ){
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
                 // Get the current item from ListView
@@ -93,6 +92,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
                 // Set the height of the Item View
                 params.height = 200;
                 view.setLayoutParams(params);
+                //setting font
                 return view;
             }
         };
@@ -103,7 +103,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
         logList = decodePreferences(DAY_OF_YEAR);                       //set logList (the list of logs for the day) to the current day of year
 
         for(int i = 0; i < logList.size(); i++){                        //create the listview based on number of logs for a given day  TODO: refresh it based on different days
-            arrayAdapter.add("Log: "+numlistlogs);
+            arrayAdapter.add("LOG "+numlistlogs);
             numlistlogs++;
         }
 
@@ -118,6 +118,11 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
                 startActivity(intent);
             }
         });
+        //SET FONTS
+        TextView display = (TextView) findViewById(R.id.log_date);
+        Typeface typeface=Typeface.createFromAsset(getAssets(), "fonts/BukhariScript.ttf");
+        final Typeface typeface2=Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.otf");
+        display.setTypeface(typeface2);
     }
     public void showDialog(){
         dateview.setOnClickListener(new View.OnClickListener() { //this is stuff for the calendar dialog
@@ -141,6 +146,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
             month_x=monthOfYear+1;
             day_x=dayOfMonth;
             dateview.setText(month_x+"/"+day_x+"/"+year_x); //refresh dateview
+            //TODO: change the key for decodepreferences and update the logs
             //Toast.makeText(AccelerationLog.this, year_x+"/"+month_x+"/"+day_x,Toast.LENGTH_LONG).show();
         }
     };

@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".DriveSession"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".AccelerationLog" />
 
         <meta-data
@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".displaydata" />
+        <activity android:name=".displaydata"></activity>
     </application>
 
 </manifest>

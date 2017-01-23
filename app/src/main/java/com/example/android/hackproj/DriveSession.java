@@ -84,6 +84,9 @@ public class DriveSession extends AppCompatActivity implements SensorEventListen
                 finish();
             }
         });
+        //start the calibration
+        Intent intent = new Intent(DriveSession.this, Calibrate.class);
+        startActivityForResult(intent, 1); //GRAB DATA FROM THE CALIBRATION
     }
     @Override
     public void onBackPressed() {

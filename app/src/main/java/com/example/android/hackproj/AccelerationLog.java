@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,6 +39,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.*;
+
+import static android.R.attr.id;
+
 public class AccelerationLog extends AppCompatActivity { //changed from extends fragment activity + implements OnMapReadyCallback
     private LinearLayout mLayout;
     private ListView listview;
@@ -78,11 +83,11 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
         mLayout = (LinearLayout) findViewById(R.id.logLayout);
         listview = (ListView) findViewById(R.id.speedList);
         dateview = (TextView) findViewById(R.id.log_date);
-        dateview.setText((month_x+1)+"/"+day_x+"/"+year_x); //initialize dateview to the current day
+        dateview.setText("Logs: " + (month_x+1)+"/"+day_x+"/"+year_x); //initialize dateview to the current day
         showDialog();                                       //this is the dialog creator for the dateview
 
         //ArrayAdapter code to put stuff into the listview
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems ){
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.listlayout, listItems ){
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
                 // Get the current item from ListView
@@ -93,6 +98,12 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
                 params.height = 200;
                 view.setLayoutParams(params);
                 //setting font
+                if(listItems.get(position) != null )
+                {
+                    TextView text = (TextView) view.findViewById(R.id.text1);
+                    Typeface typeface2=Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.otf");
+                    text.setTypeface(typeface2);
+                }
                 return view;
             }
         };
@@ -121,8 +132,7 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
         //SET FONTS
         TextView display = (TextView) findViewById(R.id.log_date);
         Typeface typeface=Typeface.createFromAsset(getAssets(), "fonts/BukhariScript.ttf");
-        final Typeface typeface2=Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.otf");
-        display.setTypeface(typeface2);
+        display.setTypeface(typeface);
     }
     public void showDialog(){
         dateview.setOnClickListener(new View.OnClickListener() { //this is stuff for the calendar dialog
@@ -138,14 +148,13 @@ public class AccelerationLog extends AppCompatActivity { //changed from extends 
            return new DatePickerDialog(this, dpickerListener,year_x,month_x,day_x);
         return null;
     }
-    private DatePickerDialog.OnDateSetListener dpickerListener
-            =new DatePickerDialog.OnDateSetListener(){
+    private DatePickerDialog.OnDateSetListener dpickerListener =new DatePickerDialog.OnDateSetListener(){
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth){
             year_x=year;
             month_x=monthOfYear+1;
             day_x=dayOfMonth;
-            dateview.setText(month_x+"/"+day_x+"/"+year_x); //refresh dateview
+            dateview.setText("Logs: "+month_x+"/"+day_x+"/"+year_x); //refresh dateview
             //TODO: change the key for decodepreferences and update the logs
             //Toast.makeText(AccelerationLog.this, year_x+"/"+month_x+"/"+day_x,Toast.LENGTH_LONG).show();
         }
